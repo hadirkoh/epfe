@@ -2,15 +2,33 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import pool from '@/lib/db';
 import { verifyToken, getTokenFromHeader } from '@/lib/auth';
 
-function isAdmin(req: NextApiRequest): boolean {
+import { logAction, checkAgentAccess } from '@/lib/audit';
+
+async function hasAccess(req: NextApiRequest, action: 'add' | 'edit' | 'delete', propertyId?: number): Promise<{ id: number; role: string } | null> {
     const payload = verifyToken(getTokenFromHeader(req.headers.authorization) || '');
-    return payload?.role === 'admin';
+    if (!payload) return null;
+    if (payload.role === 'admin') return payload;
+    if (payload.role === 'agent') {
+        const approved = await checkAgentAccess(payload.id, action, propertyId);
+        if (approved) return payload;
+    }
+    return null;
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (!isAdmin(req)) return res.status(403).json({ error: 'Accès non autorisé' });
-
     const { id } = req.query;
+    const propertyId = Number(id);
+    let userAuth: { id: number; role: string } | null = null;
+
+    if (req.method === 'PUT') {
+        userAuth = await hasAccess(req, 'edit', propertyId);
+    } else if (req.method === 'DELETE') {
+        userAuth = await hasAccess(req, 'delete', propertyId);
+    } else {
+        return res.status(405).json({ error: 'Méthode non autorisée' });
+    }
+
+    if (!userAuth) return res.status(403).json({ error: 'Accès non autorisé pour cette action/bien' });
 
     // ── PUT: update property ──
     if (req.method === 'PUT') {
@@ -44,6 +62,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
 
             await client.query('COMMIT');
+
+            // Log action
+            await logAction(userAuth.id, 'UPDATE', 'PROPRIETE', Number(id), { titre, type, prix });
+
             return res.status(200).json({ success: true });
         } catch (err) {
             await client.query('ROLLBACK');
@@ -58,6 +80,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (req.method === 'DELETE') {
         try {
             await pool.query('DELETE FROM biens_immobiliers WHERE id=$1', [id]);
+
+            // Log action
+            await logAction(userAuth.id, 'DELETE', 'PROPRIETE', Number(id));
+
             return res.status(200).json({ success: true });
         } catch (err) {
             console.error(err);

@@ -28,6 +28,20 @@ interface Agent {
     email: string;
 }
 
+interface AccessRequest {
+    id: number;
+    utilisateur_id: number;
+    nom: string;
+    prenom: string;
+    email: string;
+    explication: string;
+    type_action: string;
+    propriete_id: number | null;
+    propriete_titre: string | null;
+    statut: string;
+    date_creation: string;
+}
+
 interface FormState {
     titre: string;
     description: string;
@@ -60,8 +74,10 @@ export default function AdminPage() {
 
     const [properties, setProperties] = useState<Property[]>([]);
     const [agents, setAgents] = useState<Agent[]>([]);
+    const [requests, setRequests] = useState<AccessRequest[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
+    const [showRequests, setShowRequests] = useState(false);
 
     // Modal states
     const [showForm, setShowForm] = useState(false);
@@ -91,14 +107,17 @@ export default function AdminPage() {
         if (!user?.token) return;
         setLoading(true);
         try {
-            const [propRes, agentRes] = await Promise.all([
+            const [propRes, agentRes, reqRes] = await Promise.all([
                 fetch('/api/admin/properties', { headers: authHeader() }),
                 fetch('/api/admin/agents', { headers: authHeader() }),
+                fetch('/api/admin/requests', { headers: authHeader() }),
             ]);
             const propData = await propRes.json();
             const agentData = await agentRes.json();
+            const reqData = await reqRes.json();
             setProperties(Array.isArray(propData) ? propData : []);
             setAgents(Array.isArray(agentData) ? agentData : []);
+            setRequests(Array.isArray(reqData) ? reqData : []);
         } catch (e) {
             console.error(e);
         } finally {
@@ -211,6 +230,22 @@ export default function AdminPage() {
         }
     }
 
+    async function handleRequestUpdate(id: number, statut: string) {
+        try {
+            const res = await fetch('/api/admin/requests', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', ...authHeader() },
+                body: JSON.stringify({ id, statut }),
+            });
+            if (res.ok) {
+                showToast(lang === 'ar' ? 'تم تحديث الطلب' : 'Demande mise à jour');
+                fetchData();
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     // ── Delete ──
     async function handleDelete() {
         if (!deleteId) return;
@@ -267,9 +302,23 @@ export default function AdminPage() {
                         <h1 className="admin-page-title">🏛️ {t.admin.title}</h1>
                         <p className="admin-page-sub">{t.login.welcome} {user?.prenom} {user?.nom}</p>
                     </div>
-                    <button className="btn btn-gold admin-add-btn" onClick={openCreate}>
-                        {t.admin.addProperty}
-                    </button>
+                    <div style={{ display: 'flex', gap: '1rem' }}>
+                        <button className="btn btn-outline" onClick={() => setShowRequests(true)} style={{ position: 'relative' }}>
+                            🔔 {isAr ? 'الطلبات' : 'Demandes'}
+                            {requests.filter(r => r.statut === 'en_attente').length > 0 && (
+                                <span style={{
+                                    position: 'absolute', top: '-5px', right: '-5px', background: '#ef4444',
+                                    color: 'white', borderRadius: '50%', width: '20px', height: '20px',
+                                    fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}>
+                                    {requests.filter(r => r.statut === 'en_attente').length}
+                                </span>
+                            )}
+                        </button>
+                        <button className="btn btn-gold admin-add-btn" onClick={openCreate}>
+                            {t.admin.addProperty}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Stats */}
@@ -469,6 +518,72 @@ export default function AdminPage() {
                 </div>
             )}
 
+            {/* ── Requests Modal ─────────────────────────── */}
+            {showRequests && (
+                <div className="admin-modal-overlay" onClick={() => setShowRequests(false)}>
+                    <div className="admin-modal" style={{ maxWidth: '900px' }} onClick={(e) => e.stopPropagation()}>
+                        <div className="admin-modal-header">
+                            <h2>📋 {isAr ? 'طلبات الصلاحيات' : 'Demandes de permissions'}</h2>
+                            <button className="modal-close-x" onClick={() => setShowRequests(false)}>✕</button>
+                        </div>
+                        <div className="admin-table-wrap" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+                            <table className="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Agent</th>
+                                        <th>Action</th>
+                                        <th style={{ width: '35%' }}>Explication</th>
+                                        <th>Date</th>
+                                        <th>Statut</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {requests.length === 0 ? (
+                                        <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2rem' }}>Aucune demande</td></tr>
+                                    ) : requests.map(r => (
+                                        <tr key={r.id}>
+                                            <td>
+                                                <div style={{ fontWeight: 600 }}>{r.prenom} {r.nom}</div>
+                                                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{r.email}</div>
+                                            </td>
+                                            <td>
+                                                <div className="table-status-badge">
+                                                    {r.type_action === 'add' ? 'AJOUT' : r.type_action === 'edit' ? 'MODIFIER' : 'SUPPRIMER'}
+                                                </div>
+                                                {r.propriete_titre && (
+                                                    <div style={{ fontSize: '0.75rem', maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                        {r.propriete_titre}
+                                                    </div>
+                                                )}
+                                            </td>
+                                            <td style={{ fontSize: '0.9rem' }}>{r.explication}</td>
+                                            <td style={{ fontSize: '0.8rem' }}>{new Date(r.date_creation).toLocaleDateString()}</td>
+                                            <td>
+                                                <span className={`table-status-badge status-${r.statut}`} style={{
+                                                    background: r.statut === 'en_attente' ? '#fff8e1' : r.statut === 'approuve' ? '#e8f5e9' : '#ffebee',
+                                                    color: r.statut === 'en_attente' ? '#f57c00' : r.statut === 'approuve' ? '#2e7d32' : '#c62828'
+                                                }}>
+                                                    {r.statut}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {r.statut === 'en_attente' && (
+                                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                                        <button onClick={() => handleRequestUpdate(r.id, 'approuve')} className="btn btn-gold" style={{ padding: '0.3rem 0.6rem', fontSize: '0.8rem' }}>✓</button>
+                                                        <button onClick={() => handleRequestUpdate(r.id, 'rejete')} className="btn btn-outline" style={{ padding: '0.3rem 0.6rem', fontSize: '0.8rem', borderColor: '#ef4444', color: '#ef4444' }}>✕</button>
+                                                    </div>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* ── Delete Confirm ─────────────────────────── */}
             {deleteId && (
                 <div className="admin-modal-overlay" onClick={() => setDeleteId(null)}>
@@ -497,4 +612,3 @@ export default function AdminPage() {
         </>
     );
 }
-
