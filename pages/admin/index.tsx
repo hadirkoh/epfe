@@ -302,7 +302,10 @@ export default function AdminPage() {
                         <h1 className="admin-page-title">🏛️ {t.admin.title}</h1>
                         <p className="admin-page-sub">{t.login.welcome} {user?.prenom} {user?.nom}</p>
                     </div>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                        <Link href="/admin/bi" className="btn btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
+                            📊 {isAr ? 'لوحة BI' : 'Dashboard BI'}
+                        </Link>
                         <button className="btn btn-outline" onClick={() => setShowRequests(true)} style={{ position: 'relative' }}>
                             🔔 {isAr ? 'الطلبات' : 'Demandes'}
                             {requests.filter(r => r.statut === 'en_attente').length > 0 && (

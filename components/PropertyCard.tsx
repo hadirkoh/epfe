@@ -43,7 +43,7 @@ export default function PropertyCard({ property, fallback }: Props) {
     const telegramBot = process.env.NEXT_PUBLIC_TELEGRAM_BOT || 'ImmobilierBot';
 
     // Telegram deep link: passes property id and title to the bot
-    const telegramLink = `https://t.me/${telegramBot}?start=bien_${property.id}`;
+    const telegramLink = `https://t.me/${telegramBot}?start=BIEN_${property.id}`;
 
     return (
         <article className="property-card">

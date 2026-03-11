@@ -2683,3 +2683,592 @@ a {
   border-color: var(--gold);
   outline: none;
 }
+
+/* ═══════════════════════════════════════════════════════
+   BI DASHBOARD STYLES
+   ═══════════════════════════════════════════════════════ */
+
+.bi-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 90px 2rem 4rem;
+  min-height: 100vh;
+}
+
+/* Header */
+.bi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.bi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(201, 168, 76, 0.12);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: var(--gold);
+  padding: 5px 14px;
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.bi-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+
+.bi-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.bi-header-actions {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.bi-back-btn {
+  padding: 9px 18px;
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.bi-back-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.bi-refresh-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  background: var(--dark-2);
+  color: var(--text-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bi-refresh-btn:hover {
+  border-color: var(--gold);
+  transform: rotate(180deg);
+}
+
+/* Section */
+.bi-section {
+  margin-bottom: 2rem;
+}
+
+.bi-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bi-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--glass-border), transparent);
+}
+
+/* KPI Grid */
+.bi-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.2rem;
+}
+
+.bi-kpi-card {
+  background: var(--dark-2);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.6rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.5s ease both;
+}
+
+.bi-kpi-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.bi-kpi-card:hover::before {
+  opacity: 1;
+}
+
+.bi-kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+}
+
+.bi-kpi-gold {
+  border-color: rgba(201, 168, 76, 0.25);
+}
+
+.bi-kpi-gold::before {
+  background: rgba(201, 168, 76, 0.04);
+}
+
+.bi-kpi-gold:hover {
+  border-color: rgba(201, 168, 76, 0.5);
+}
+
+.bi-kpi-green {
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.bi-kpi-green::before {
+  background: rgba(16, 185, 129, 0.04);
+}
+
+.bi-kpi-green:hover {
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.bi-kpi-blue {
+  border-color: rgba(74, 108, 247, 0.25);
+}
+
+.bi-kpi-blue::before {
+  background: rgba(74, 108, 247, 0.04);
+}
+
+.bi-kpi-blue:hover {
+  border-color: rgba(74, 108, 247, 0.5);
+}
+
+.bi-kpi-purple {
+  border-color: rgba(139, 92, 246, 0.25);
+}
+
+.bi-kpi-purple::before {
+  background: rgba(139, 92, 246, 0.04);
+}
+
+.bi-kpi-purple:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.bi-kpi-orange {
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.bi-kpi-orange::before {
+  background: rgba(245, 158, 11, 0.04);
+}
+
+.bi-kpi-orange:hover {
+  border-color: rgba(245, 158, 11, 0.5);
+}
+
+.bi-kpi-red {
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.bi-kpi-red::before {
+  background: rgba(239, 68, 68, 0.04);
+}
+
+.bi-kpi-red:hover {
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.bi-kpi-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+  display: block;
+}
+
+.bi-kpi-value {
+  font-size: clamp(1.4rem, 2vw, 1.8rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  line-height: 1.1;
+}
+
+.bi-kpi-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.bi-kpi-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Charts Row */
+.bi-charts-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+
+.bi-charts-row-2 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.bi-chart-card {
+  background: var(--dark-2);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.6rem;
+  transition: border-color 0.3s;
+}
+
+.bi-chart-card:hover {
+  border-color: rgba(201, 168, 76, 0.2);
+}
+
+.bi-chart-wide {
+  width: 100%;
+}
+
+.bi-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.bi-chart-header h3 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bi-chart-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--dark-3);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+/* Donut Chart */
+.bi-donut-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.bi-donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.bi-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+}
+
+.bi-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.bi-legend-label {
+  flex: 1;
+  color: var(--text-secondary);
+}
+
+.bi-legend-val {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Bar Chart */
+.bi-bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.bi-bar-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 36px;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+}
+
+.bi-bar-label {
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+  font-size: 0.75rem;
+}
+
+.bi-bar-track {
+  height: 8px;
+  background: var(--dark-3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bi-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  min-width: 4px;
+  animation: barGrow 0.8s ease both;
+  transform-origin: left;
+}
+
+@keyframes barGrow {
+  from {
+    width: 0 !important;
+  }
+}
+
+.bi-bar-value {
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: right;
+  font-size: 0.8rem;
+}
+
+/* Line Chart */
+.bi-linechart-wrap {
+  overflow-x: auto;
+}
+
+.bi-line-legend {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.8rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  justify-content: center;
+}
+
+.bi-line-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bi-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* Agent Table */
+.bi-agent-table-wrap {
+  overflow-x: auto;
+}
+
+.bi-agent-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.bi-agent-table thead tr {
+  background: var(--dark-3);
+}
+
+.bi-agent-table th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.bi-agent-table tbody tr {
+  border-bottom: 1px solid var(--glass-border);
+  transition: background 0.2s;
+}
+
+.bi-agent-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.bi-agent-table td {
+  padding: 14px;
+  vertical-align: middle;
+}
+
+.bi-agent-avatar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bi-avatar-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #000;
+  flex-shrink: 0;
+}
+
+.bi-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.bi-chip-gold {
+  background: rgba(201, 168, 76, 0.15);
+  color: var(--gold);
+}
+
+.bi-chip-green {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10B981;
+}
+
+.bi-chip-blue {
+  background: rgba(74, 108, 247, 0.15);
+  color: #4A6CF7;
+}
+
+.bi-perf-bar-track {
+  height: 6px;
+  background: var(--dark-3);
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 80px;
+}
+
+.bi-perf-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s ease;
+}
+
+/* Loading */
+.bi-loading {
+  text-align: center;
+  padding: 6rem 2rem;
+  color: var(--text-secondary);
+}
+
+.bi-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--dark-3);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin: 0 auto 1.5rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.bi-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #EF4444;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.bi-footer-note {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+/* Responsive BI */
+@media (max-width: 1100px) {
+
+  .bi-charts-row,
+  .bi-charts-row-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .bi-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bi-charts-row,
+  .bi-charts-row-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .bi-container {
+    padding: 80px 1rem 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .bi-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}

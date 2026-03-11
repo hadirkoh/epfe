@@ -97,7 +97,7 @@ export default function PropertyDetail() {
 
     const telegramBot = process.env.NEXT_PUBLIC_TELEGRAM_BOT || 'ImmobilierBot';
     // Deep link encodes property id and title for the bot
-    const telegramDeepLink = `https://t.me/${telegramBot}?start=bien_${property.id}_${encodeURIComponent(property.titre.slice(0, 30))}`;
+    const telegramDeepLink = `https://t.me/${telegramBot}?start=BIEN_${property.id}`;
 
     const agentInitials = property.agent_nom
         ? `${property.agent_prenom?.[0] || ''}${property.agent_nom?.[0] || ''}`.toUpperCase()
